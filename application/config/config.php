@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://85.234.130.106:8080/ci3_project/';
+$config['base_url'] = 'http://85.234.130.106:8080/cabana/';
 
 
 /*
