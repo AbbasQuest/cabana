@@ -75,12 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '85.234.130.106',  // PostgreSQL server IP
-    'port'     => '5432',            // PostgreSQL port
-    'username' => 'cabanaboats',     // PostgreSQL username
-    'password' => 'Temp12#',         // PostgreSQL password
-    'database' => 'CabanaBoats',     // PostgreSQL database name
-    'dbdriver' => 'postgre',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'cabana',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
