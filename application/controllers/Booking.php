@@ -242,6 +242,10 @@ class Booking extends CI_Controller{
             $bookings = $this->Booking_Model->get_bookings($postData);
             $slotArray = array();
             $thisSlots = json_decode($slots[0]['slots']);
+            if (is_string($thisSlots)) {
+                $thisSlots = json_decode($thisSlots);
+            }
+            
             foreach($thisSlots as $slot){
                 $slotObject['id'] = $slot->id;
                 $slotObject['name'] = $slot->name;

@@ -44,7 +44,7 @@ class Booking_Model extends CI_Model{
 
         $query = $this->db->query($sql);
         if($query->num_rows() > 0){
-            return $query->result();
+            return $query->result_array();
         }else{
             return FALSE;
         }
