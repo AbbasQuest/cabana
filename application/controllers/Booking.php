@@ -89,6 +89,10 @@ class Booking extends CI_Controller{
             $slots = json_decode($pricing[0]['slots']);
 
             $thisSlot = array();
+                   
+            if (is_string($slots)) {
+                $slots = json_decode($slots);
+            }
             foreach($slots as $slot){
                 if($postData['slot'] == $slot->id){
                     $thisSlot = $slot;
@@ -184,6 +188,11 @@ class Booking extends CI_Controller{
             $pricing = $this->Pricing_Model->get($where);
 
             $slots = json_decode($pricing[0]['slots']);
+            
+            if (is_string($slots)) {
+                $slots = json_decode($slots);
+            }
+            
             $bookings[0]->slot = $slots[0];
             $ordersDetails = $this->Orders_Model->getBookingOrderDetails(array("booking_id"=> $bookings[0]->id));
 
