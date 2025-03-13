@@ -388,6 +388,10 @@ class Booking extends CI_Controller{
             $pricing = $this->Pricing_Model->get($where);
 
             $slots = json_decode($pricing[0]['slots']);
+                         
+            if (is_string($slots)) {
+                $slots = json_decode($slots);
+            }
 
             $result['booking_count'] = Count($bookings);
             $passengersCount = 0;
