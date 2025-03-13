@@ -16,17 +16,20 @@ class Booking_Model extends CI_Model{
     }
 
     public function get($where){
-        $sql = "SELECT bookings.*, bookings.id as book_id, user.id as cust_id, user.first_name, user.last_name FROM bookings 
-        INNER JOIN user ON user.id = bookings.customer
-        WHERE bookings.date = ?
-        ORDER BY book_id DESC";
+        $sql = 'SELECT bookings.*, bookings.id AS book_id, "user".id AS cust_id, 
+        "user".first_name, "user".last_name 
+ FROM bookings 
+ INNER JOIN "user" ON "user".id = bookings.customer 
+ WHERE bookings.date = ? 
+ ORDER BY book_id DESC';
 
-        $query = $this->db->query($sql, [$where['date']]);
-        if($query->num_rows() > 0){
-            return $query->result();
-        }else{
-            return FALSE;
-        }
+$query = $this->db->query($sql, [$where['date']]);
+
+if ($query->num_rows() > 0) {  // For PostgreSQL, check `rowCount()`
+return $query->result();
+} else {
+return FALSE;
+}
         // $this->db->where($where);
         // $query = $this->db->get('bookings');
         // if($query->num_rows() > 0){
