@@ -33,6 +33,11 @@ class Booking extends CI_Controller{
             $pricings = $this->Pricing_Model->get($where);
             $slots = json_decode($pricings[0]['slots']);
 
+                     
+            if (is_string($slots)) {
+                $slots = json_decode($slots);
+            }
+
             foreach($result as $res){
                 foreach($slots as $slot){
                     if($slot->id == $res->slot){
