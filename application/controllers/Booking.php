@@ -37,10 +37,9 @@ class Booking extends CI_Controller{
             if (is_string($slots)) {
                 $slots = json_decode($slots);
             }
-            // print_r($result[0]->slot);
             foreach($result as $res){
                 foreach($slots as $slot){
-                    if((int) $slot->id === (int) $res->slot){
+                    if($slot->id === $res->slot){
                         $res->slot = $slot;
                     }
                 }
