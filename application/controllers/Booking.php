@@ -37,17 +37,14 @@ class Booking extends CI_Controller{
             if (is_string($slots)) {
                 $slots = json_decode($slots);
             }
-
+            // print_r($result[0]->slot);
             foreach($result as $res){
                 foreach($slots as $slot){
-                    if($slot->id == $res->slot){
+                    if((int) $slot->id === (int) $res->slot){
                         $res->slot = $slot;
                     }
                 }
             }
-            // print_r($result); die();
-
-          
 
             return $this->api_response(200, 'true', "Bookings fetched successfully", $result);
 
@@ -531,6 +528,72 @@ class Booking extends CI_Controller{
 
         }catch(Exception $e){
             return $this->api_response(500, 'false', $e->getMessage(), null);
+        }
+    }
+
+    public function reschedule(){
+        try{
+
+            $postData = json_decode(file_get_contents("php://input"), true);
+            $this->form_validation->set_data($postData);
+            $this->form_validation->set_rules('id', "Booking ID", 'required');
+            $this->form_validation->set_rules('slot', "Slot", 'required');
+            $this->form_validation->set_rules('date', 'Date', 'required');
+            $where['id'] = $postData['id'];
+            $booking = $this->Booking_Model->get_bookings($where);
+            if(!$booking){
+                return $this->api_response(400, 'false', "Booking not found", null);
+            }
+            if($booking[0]->checkout){
+                return $this->api_response(400, 'false', "checkout already created", $booking[0]);
+            }
+
+        // lets check if any slots are available
+
+        $where_booking['date'] = $postData['date'];
+        $pricing = $this->Pricing_Model->get($where_booking);
+        $slots = json_decode($pricing[0]['slots']);
+
+        $thisSlot = array();
+               
+        if (is_string($slots)) {
+            $slots = json_decode($slots);
+        }
+        foreach($slots as $slot){
+            if($postData['slot'] == $slot->id){
+                $thisSlot = $slot;
+            }
+
+        }
+
+        $where_booking['slot'] = $postData["slot"];
+        $where_booking['date'] = $postData['date'];
+
+        $bookings = $this->Booking_Model->get($where_booking);
+
+        // ==========================================
+
+
+        if($bookings && count($bookings) >= $thisSlot->boats){
+            // Handle the exception here
+            return $this->api_response(404, 'false', 'No Slots available for this slot', null);
+        }
+
+
+     
+        $result = $this->Booking_Model->update(array('id' => $postData['id']), $where_booking);
+
+            if (!$result) {
+                return $this->api_response(400, 'false', 'Booking could not be rescheduled', null);
+            }  
+
+
+            return $this->api_response(200, 'true', 'Booking rescheduled successfully', $result);
+
+
+        }catch(Exception $e){
+              // Handle the exception here
+              return $this->api_response(500, 'false', $e->getMessage(), null);
         }
     }
 
