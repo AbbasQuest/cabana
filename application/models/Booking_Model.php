@@ -33,17 +33,32 @@ class Booking_Model extends CI_Model{
     }
 
     public function get_all(){
-        $sql = 'SELECT bookings.*, bookings.id as book_id, "user".id as cust_id, "user".country, "user".first_name, "user".last_name FROM bookings 
-        INNER JOIN "user" ON "user".id = bookings.customer
-        ORDER BY book_id DESC';
-
+        $sql = 'SELECT bookings.*, bookings.id AS book_id, "user".id AS cust_id, "user".country, "user".first_name, "user".last_name 
+                FROM bookings 
+                INNER JOIN "user" ON "user".id = bookings.customer
+                WHERE bookings.date >= CURRENT_DATE';
+    
         $query = $this->db->query($sql);
-        if($query->num_rows() > 0){
+        if ($query && $query->num_rows() > 0) {
             return $query->result_array();
-        }else{
+        } else {
             return FALSE;
         }
     }
+    
+    
+    // public function get_all(){
+    //     $sql = 'SELECT bookings.*, bookings.id as book_id, "user".id as cust_id, "user".country, "user".first_name, "user".last_name FROM bookings 
+    //     INNER JOIN "user" ON "user".id = bookings.customer
+    //     ORDER BY book_id DESC';
+
+    //     $query = $this->db->query($sql);
+    //     if($query->num_rows() > 0){
+    //         return $query->result_array();
+    //     }else{
+    //         return FALSE;
+    //     }
+    // }
 
     public function get_bookings($where){
         $this->db->where($where);
