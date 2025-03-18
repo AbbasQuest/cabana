@@ -32,18 +32,25 @@ class Booking extends CI_Controller{
             }
             $pricings = $this->Pricing_Model->get($where);
             $slots = json_decode($pricings[0]['slots']);
-
                      
             if (is_string($slots)) {
                 $slots = json_decode($slots);
             }
+            $book_id= (int)$result[0]->slot;
             foreach($result as $res){
                 foreach($slots as $slot){
-                    if($slot->id === $res->slot){
+                    if($book_id === $slot->id){
                         $res->slot = $slot;
                     }
                 }
             }
+            // foreach($result as $res){
+            //     foreach($slots as $slot){
+            //         if($slot->id === $res->slot){
+            //             $res->slot = $slot;
+            //         }
+            //     }
+            // }
 
             return $this->api_response(200, 'true', "Bookings fetched successfully", $result);
 
