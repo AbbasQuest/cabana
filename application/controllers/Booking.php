@@ -57,10 +57,15 @@ class Booking extends CI_Controller{
         try{
 
             $result = $this->Booking_Model->get_all();
+            
 
             if(!$result){
                 return $this->api_response(400, 'false', 'Bookings not found', null);
             }
+            $result = json_decode(json_encode($result));
+            usort($result, function ($a, $b) {
+                return strtotime($b->date) - strtotime($a->date);
+            });
 
             return $this->api_response(200, 'true', "Bookings fetched successfully", $result);
 
@@ -123,9 +128,9 @@ class Booking extends CI_Controller{
             // ========================================
 
             $boats = $postData['passengers'] / 10;
-            if($boats > 1){
+            // if($boats > 1){
                 $boats = ceil($boats);
-            }
+            // }
             $number_of_boats = $boats;
 
             $booking_id =  'BKCB' . strtoupper(uniqid());
@@ -193,8 +198,13 @@ class Booking extends CI_Controller{
             if (is_string($slots)) {
                 $slots = json_decode($slots);
             }
-            
-            $bookings[0]->slot = $slots[0];
+
+            $book_id= (int)$bookings[0]->slot;
+            foreach($slots as $slot){
+                if($book_id === $slot->id){
+                    $bookings[0]->slot = $slot;
+                }
+            }
             $ordersDetails = $this->Orders_Model->getBookingOrderDetails(array("booking_id"=> $bookings[0]->id));
 
             if($ordersDetails){
@@ -291,6 +301,9 @@ class Booking extends CI_Controller{
             $num_of_passenger = $postData['passengers'];
             $where['date'] = $postData['date'];
             $pricing = $this->Pricing_Model->get($where);
+            if(!$pricing){
+                return $this->api_response(400, 'true', "No pricings available for this date", null);
+            }
             if($num_of_passenger <= 10){
 
                 $date = new DateTime($postData['date']);
@@ -310,7 +323,6 @@ class Booking extends CI_Controller{
             }else{
                 
                 $data = array();
-                
                 if($pricing[0]['discount_per_passenger'] > 0){
                     $extra_passengers = $num_of_passenger - 10;
                     $total_discount = $pricing[0]['discount_per_passenger'] * $extra_passengers;
@@ -390,6 +402,7 @@ class Booking extends CI_Controller{
             }
 
             $result['booking_count'] = Count($bookings);
+
             $passengersCount = 0;
             $boatsBooked = 0;
             foreach($bookings as $booking){
