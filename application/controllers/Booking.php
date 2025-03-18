@@ -191,14 +191,14 @@ class Booking extends CI_Controller{
             }
 
             $wherePricing['date'] = $bookings[0]->date;
-            $pricing = $this->Pricing_Model->get($where);
-
+            $pricing = $this->Pricing_Model->get($wherePricing);
+            // print_r($pricing);
             $slots = json_decode($pricing[0]['slots']);
             
             if (is_string($slots)) {
                 $slots = json_decode($slots);
             }
-
+            // print_r($slots);
             $book_id= (int)$bookings[0]->slot;
             foreach($slots as $slot){
                 if($book_id === $slot->id){

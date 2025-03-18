@@ -53,7 +53,7 @@ class Pricing_Model extends CI_Model{
         $query = $this->db->get("pricing");
         if($query->num_rows() > 0){
             return $query->result();
-        }else{
+        }else{  
             return FALSE;
         }
     }
