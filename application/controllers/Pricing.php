@@ -30,7 +30,7 @@ class Pricing extends CI_Controller{
 
 
             foreach($postData as &$postSlots){  // Add '&' to modify the original array
-                $postSlots['slots'] = json_encode($postSlots['slots']); // Encode properly
+                $postSlots['slots'] = $postSlots['slots']; // Encode properly
             }
             unset($postSlots); 
 
@@ -56,7 +56,12 @@ class Pricing extends CI_Controller{
             if(!$pricing){
                 return $this->api_response(400, 'false', 'Pricing not found', null);
             }
-
+            // $newArray = array();
+            // foreach($pricing as $pr){
+            //     if($pr->status === "f"){
+            //         array_push($newArray, $pr);
+            //     }
+            // }
             return $this->api_response(200, 'true', "Pricings fetched successfully", $pricing);
             
         }catch(Exception $e){
@@ -123,7 +128,7 @@ class Pricing extends CI_Controller{
             $data['discount_per_passenger'] = $postData['discount_per_passenger'];
             $data['price_per_person'] = $postData['price_per_person'];
             $data['status'] = $postData['status'];
-            $data['slots'] = json_encode($postData['slots']);
+            $data['slots'] = $postData['slots'];
 
             $result = $this->Pricing_Model->update($where, $data);
 
