@@ -30,7 +30,7 @@ class Pricing extends CI_Controller{
 
 
             foreach($postData as &$postSlots){  // Add '&' to modify the original array
-                $postSlots['slots'] = $postSlots['slots']; // Encode properly
+                $postSlots['slots'] = json_encode($postSlots['slots']); // Encode properly
             }
             unset($postSlots); 
 
